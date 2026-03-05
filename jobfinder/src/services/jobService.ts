@@ -8,15 +8,20 @@ export const fetchJobs = async (): Promise<Job[]> => {
   try {
     const response = await axios.get(API_URL);
 
-    const jobs = response.data;
+    const jobs = response.data.jobs;
 
-    // Add unique IDs because API does not provide them
+    if (!Array.isArray(jobs)) {
+      return [];
+    }
+
     const jobsWithId: Job[] = jobs.map((job: any) => ({
       id: uuid.v4().toString(),
       title: job.title ?? 'No Title',
-      company: job.company ?? 'Unknown Company',
-      location: job.location ?? 'Not Specified',
-      salary: job.salary ?? 'Not Specified',
+      company: job.companyName ?? 'Unknown Company',
+      locations: job.locations ?? undefined,
+      maxSalary: job.maxSalary ?? undefined,
+      minSalary: job.minSalary ?? undefined,
+      currency: job.currency ?? undefined,
       description: job.description ?? '',
     }));
 

@@ -5,17 +5,79 @@ import {
   DefaultTheme,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { TouchableOpacity, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
 
-import { ThemeContext } from '../context/ThemeContext';
 import JobFinderScreen from '../screens/JobFinderScreen';
 import SavedJobsScreen from '../screens/SavedJobsScreen';
+import JobDetailsScreen from '../screens/JobDetailsScreen';
 import ApplicationFormScreen from '../screens/ApplicationFormScreen';
+import AppliedJobsScreen from '../screens/AppliedJobsScreen';
+import { ThemeContext } from '../context/ThemeContext';
+import { RootStackParamList } from '../navigation/navigationTypes';
+import ThemeToggle from '../components/ThemeToggle';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
+
+function BottomTabs() {
+  const { colors } = useContext(ThemeContext);
+
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.headerbg,
+        },
+        tabBarStyle: {
+          backgroundColor: colors.headerbg,
+          borderTopWidth: 0,
+          elevation: 0,
+        },
+        headerTintColor: colors.oppositetext,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+
+        tabBarActiveTintColor: colors.button,
+        tabBarInactiveTintColor: colors.buttonNotActive,
+      }}
+    >
+      <Tab.Screen
+        name="Jobs"
+        component={JobFinderScreen}
+        options={{
+          title: 'Lets find a job',
+          tabBarLabel: 'Find Jobs',
+          tabBarIcon: ({ size, color }) => <Ionicons name="search" size={size} color={color} />,
+          headerRight: () => <ThemeToggle />,
+        }}
+      />
+      <Tab.Screen
+        name="SavedJobs"
+        component={SavedJobsScreen}
+        options={{
+          title: 'Saved Jobs',
+          tabBarIcon: ({ size, color }) => <Ionicons name="bookmark" size={size} color={color} />, 
+          headerRight: () => <ThemeToggle />,
+        }}
+      />
+       <Tab.Screen
+          name="AppliedJobs"
+          component={AppliedJobsScreen}
+          options={{
+            title: 'Applied',
+            tabBarIcon: ({ size, color }) => <Ionicons name="checkmark-done-circle" size={size} color={color} />,
+            headerRight: () => <ThemeToggle />,
+          }}
+        />
+    </Tab.Navigator>
+  );
+}
 
 export default function RootNavigator() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, colors } = useContext(ThemeContext);
 
   return (
     <NavigationContainer
@@ -23,18 +85,30 @@ export default function RootNavigator() {
     >
       <Stack.Navigator
         screenOptions={{
-          headerRight: () => (
-            <TouchableOpacity onPress={toggleTheme}>
-              <Text style={{ fontSize: 18 }}>
-                {theme === 'light' ? '🌙' : '☀️'}
-              </Text>
-            </TouchableOpacity>
-          ),
+            headerStyle: {
+              backgroundColor: colors.headerbg,
+            },
+            headerTintColor: colors.oppositetext,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
         }}
       >
-        <Stack.Screen name="Jobs" component={JobFinderScreen} />
-        <Stack.Screen name="Saved" component={SavedJobsScreen} />
-        <Stack.Screen name="ApplicationForm" component={ApplicationFormScreen} />
+        <Stack.Screen
+          name="HomeTabs"
+          component={BottomTabs}
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen
+          name="JobDetails"
+          component={JobDetailsScreen}
+          options={{ title: 'Job Details' }}
+        />
+        <Stack.Screen
+          name="ApplicationForm"
+          component={ApplicationFormScreen}
+          options={{ title: 'Apply for Job' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

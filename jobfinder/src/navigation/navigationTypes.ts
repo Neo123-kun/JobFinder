@@ -1,12 +1,12 @@
-export type RootStackParamList = {
-  Tabs: undefined;
-  ApplicationForm: {
-    jobId: string;
-    fromSaved?: boolean;
-  };
-};
+import { Job } from '../types/job';
 
-export type BottomTabParamList = {
+export type RootStackParamList = {
   JobFinder: undefined;
-  SavedJobs: undefined;
+  JobDetails: { job: Job };
+  ApplicationForm: { 
+    jobId: string; 
+    jobData?: Job;
+    fromSaved?: boolean 
+  };
+  HomeTabs: undefined;
 };

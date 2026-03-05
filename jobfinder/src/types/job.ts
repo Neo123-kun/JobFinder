@@ -1,8 +1,11 @@
 export interface Job {
-  id: string; // we generate this
+  id: string; 
   title: string;
   company: string;
-  location?: string;
+  locations?: string | string[];
   salary?: string;
+  minSalary?: number;
+  maxSalary?: number;
+  currency?: string;
   description?: string;
 }

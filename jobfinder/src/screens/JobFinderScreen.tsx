@@ -1,36 +1,39 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useContext,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   Text,
   FlatList,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+
 import { fetchJobs } from '../services/jobService';
 import { Job } from '../types/job';
 import { useJobContext } from '../context/JobContext';
 import { RootStackParamList } from '../navigation/navigationTypes';
-import { styles } from './JobFinderScreen.styles';
+import { createStyles } from './JobFinderScreen.styles';
 import { ThemeContext } from '../context/ThemeContext';
 
-type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'ApplicationForm'
->;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function JobFinderScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { addJob, isSaved } = useJobContext();
+  const { colors } = useContext(ThemeContext);
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-
-  const { colors } = useContext(ThemeContext);
+  const styles = createStyles(colors);
 
   useEffect(() => {
     loadJobs();
@@ -48,48 +51,60 @@ export default function JobFinderScreen() {
   };
 
   const filteredJobs = useMemo(() => {
-    return jobs.filter(job =>
-      job.title.toLowerCase().includes(search.toLowerCase()) ||
-      job.company.toLowerCase().includes(search.toLowerCase())
+    return jobs.filter(
+      job =>
+        job.title.toLowerCase().includes(search.toLowerCase()) ||
+        job.company.toLowerCase().includes(search.toLowerCase())
     );
   }, [jobs, search]);
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
+      <View style={[styles.center, { backgroundColor: colors.background }]}> 
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {/* Search Bar */}
+    <View style={[styles.container, { backgroundColor: colors.background }] }>
       <TextInput
         placeholder="Search jobs..."
         value={search}
         onChangeText={setSearch}
-        style={styles.searchInput}
+        style={[styles.searchInput, { borderColor: '#ccc', color: colors.text, backgroundColor: colors.card }]}
       />
 
-      {/* Job List */}
       <FlatList
         data={filteredJobs}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => {
           const saved = isSaved(item.id);
 
-          return (
-            <View style={styles.card}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text>{item.company}</Text>
-              <Text>{item.salary}</Text>
+            return (
+              <TouchableOpacity
+                style={[styles.card, { backgroundColor: colors.cardbg }]}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('JobDetails', { job: item })}
+              >
+              
+              <View style={styles.bgCircleOuter} />
+              <View style={styles.bgCircleInner} />
+
+              <Text style={[styles.title, { color: colors.oppositetext }]}>{item.title}</Text>
+              <Text style={{ color: colors.oppositetext }}>Company: {item.company}</Text>
+              <View style={{ marginTop: 8 }}>
+                <Text style={{ color: colors.oppositetext, fontSize: 12 }}>
+                  {item.minSalary ?? ''} - {item.maxSalary ?? ''} {item.currency ?? ''}
+                </Text>
+              </View>
 
               <View style={styles.buttonRow}>
                 <TouchableOpacity
                   style={[
                     styles.saveButton,
                     saved && styles.savedButton,
+                    { backgroundColor: saved ? colors.buttonSelected : colors.button }
                   ]}
                   onPress={() => addJob(item)}
                   disabled={saved}
@@ -100,17 +115,19 @@ export default function JobFinderScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={styles.applyButton}
+                  style={[styles.applyButton, { backgroundColor: colors.buttonV2 }]}
                   onPress={() =>
                     navigation.navigate('ApplicationForm', {
                       jobId: item.id,
+                      jobData: item, 
+                      fromSaved: false,
                     })
                   }
                 >
-                  <Text style={styles.buttonText}>Apply</Text>
+                  <Text style={[styles.buttonText, { fontWeight: 'bold' }]}>Apply</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />

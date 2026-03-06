@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -16,6 +17,7 @@ import { RootStackParamList } from '../navigation/navigationTypes';
 import { useJobContext } from '../context/JobContext';
 import { useStyles } from './ApplicationFormScreen.styles';
 import { ThemeContext } from '../context/ThemeContext';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ApplicationForm'>;
 type RouteProps = RouteProp<RootStackParamList, 'ApplicationForm'>;
@@ -51,8 +53,9 @@ export default function ApplicationFormScreen() {
   const { colors } = useContext(ThemeContext);
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.dgreentext }]}>Job Application</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+        <Text style={[styles.title, { color: colors.dgreentext }]}>Job Application</Text>
       
       {/* Job Brief Header */}
       <View style={{ marginBottom: 10 }}>
@@ -83,7 +86,7 @@ export default function ApplicationFormScreen() {
 
           Alert.alert(
             'Application Submitted',
-            'Your application has been sent successfully!',
+            'Your application has been submitted successfully!',
             [
               {
                 text: 'Okay',
@@ -163,5 +166,6 @@ export default function ApplicationFormScreen() {
         )}
       </Formik>
     </ScrollView>
+    </SafeAreaView>
   );
 }

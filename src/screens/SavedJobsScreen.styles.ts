@@ -56,13 +56,17 @@ export const createStyles = (colors: any) => StyleSheet.create({
   removeButton: {
     backgroundColor: 'rgba(77, 54, 130, 0.79)', 
     paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   applyButton: {
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 8,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     color: colors.oppositetext,

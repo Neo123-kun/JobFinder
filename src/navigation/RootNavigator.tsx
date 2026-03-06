@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
+import { Platform, StatusBar as RNStatusBar } from 'react-native';
 
 import JobFinderScreen from '../screens/JobFinderScreen';
 import SavedJobsScreen from '../screens/SavedJobsScreen';
@@ -17,6 +17,8 @@ import { ThemeContext } from '../context/ThemeContext';
 import { RootStackParamList } from '../navigation/navigationTypes';
 import ThemeToggle from '../components/ThemeToggle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -48,9 +50,11 @@ function BottomTabs() {
         name="Jobs"
         component={JobFinderScreen}
         options={{
-          title: 'Lets find a job',
+          title: 'Lets find a job!',
           tabBarLabel: 'Find Jobs',
-          tabBarIcon: ({ size, color }) => <Ionicons name="search" size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="search" size={size} color={color} />
+          ),
           headerRight: () => <ThemeToggle />,
         }}
       />
@@ -59,19 +63,23 @@ function BottomTabs() {
         component={SavedJobsScreen}
         options={{
           title: 'Saved Jobs',
-          tabBarIcon: ({ size, color }) => <Ionicons name="bookmark" size={size} color={color} />, 
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="bookmark" size={size} color={color} />
+          ),
           headerRight: () => <ThemeToggle />,
         }}
       />
-       <Tab.Screen
-          name="AppliedJobs"
-          component={AppliedJobsScreen}
-          options={{
-            title: 'Applied',
-            tabBarIcon: ({ size, color }) => <Ionicons name="checkmark-done-circle" size={size} color={color} />,
-            headerRight: () => <ThemeToggle />,
-          }}
-        />
+      <Tab.Screen
+        name="AppliedJobs"
+        component={AppliedJobsScreen}
+        options={{
+          title: 'Applied',
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="checkmark-done-circle" size={size} color={color} />
+          ),
+          headerRight: () => <ThemeToggle />,
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -79,12 +87,15 @@ function BottomTabs() {
 export default function RootNavigator() {
   const { theme, colors } = useContext(ThemeContext);
 
+  // calculate top padding for Android status bar
+  const statusBarHeight = Platform.OS === 'android' ? RNStatusBar.currentHeight ?? 0 : 0;
+
   return (
-    <NavigationContainer
-      theme={theme === 'dark' ? DarkTheme : DefaultTheme}
-    >
-      <Stack.Navigator
-        screenOptions={{
+    <SafeAreaProvider>
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+      <NavigationContainer theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack.Navigator
+          screenOptions={{
             headerStyle: {
               backgroundColor: colors.headerbg,
             },
@@ -92,24 +103,39 @@ export default function RootNavigator() {
             headerTitleStyle: {
               fontWeight: 'bold',
             },
-        }}
-      >
-        <Stack.Screen
-          name="HomeTabs"
-          component={BottomTabs}
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen
-          name="JobDetails"
-          component={JobDetailsScreen}
-          options={{ title: 'Job Details' }}
-        />
-        <Stack.Screen
-          name="ApplicationForm"
-          component={ApplicationFormScreen}
-          options={{ title: 'Apply for Job' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          }}
+        >
+          <Stack.Screen
+            name="HomeTabs"
+            component={BottomTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="JobDetails"
+            component={JobDetailsScreen}
+            options={{
+              title: 'Job Details',
+              headerStyle: {
+                backgroundColor: colors.headerbg,
+                paddingTop: statusBarHeight,
+                height: 60 + statusBarHeight,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="ApplicationForm"
+            component={ApplicationFormScreen}
+            options={{
+              title: 'Apply for Job',
+              headerStyle: {
+                backgroundColor: colors.headerbg,
+                paddingTop: statusBarHeight,
+                height: 60 + statusBarHeight,
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

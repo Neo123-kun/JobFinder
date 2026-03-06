@@ -72,7 +72,7 @@ export default function JobFinderScreen() {
         placeholder="Search jobs..."
         value={search}
         onChangeText={setSearch}
-        style={[styles.searchInput, { borderColor: '#ccc', color: colors.text, backgroundColor: colors.card }]}
+        style={[styles.searchInput, { borderColor: colors.button, color: colors.text, backgroundColor: colors.card }]}
       />
 
       <FlatList

@@ -3,6 +3,7 @@ import { View, Text, FlatList } from 'react-native';
 import { useJobContext } from '../context/JobContext';
 import { createStyles } from './JobFinderScreen.styles';
 import { ThemeContext } from '../context/ThemeContext';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export default function AppliedJobsScreen() {
   const { appliedJobs } = useJobContext();
@@ -12,6 +13,7 @@ export default function AppliedJobsScreen() {
   if (appliedJobs.length === 0) {
     return (
       <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <FontAwesome5 name="sad-tear" size={48} color={colors.buttonSelected} style={{ marginBottom: 16 }} />
         <Text style={{ color: colors.text }}>No applied jobs yet.</Text>
       </View>
     );

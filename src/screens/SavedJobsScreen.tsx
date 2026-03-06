@@ -6,7 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useJobContext } from '../context/JobContext';
 import { RootStackParamList } from '../navigation/navigationTypes';
 import { ThemeContext } from '../context/ThemeContext';
-import { createStyles } from './SavedJobsScreen.styles'; 
+import { createStyles } from './SavedJobsScreen.styles';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'; 
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ApplicationForm'>;
 
@@ -21,7 +22,8 @@ export default function SavedJobsScreen() {
   if (savedJobs.length === 0) {
     return (
       <View style={[styles.center, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.text }}>No saved jobs yet.</Text>
+        <FontAwesome5 name="flushed" size={48} color={colors.buttonSelected} style={{ marginBottom: 16 }} />
+        <Text style={{ color: colors.buttonSelected }}>You have no saved jobs... Yet.</Text>
       </View>
     );
   }

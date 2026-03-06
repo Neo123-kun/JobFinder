@@ -54,6 +54,7 @@ export const JobProvider = ({ children }: { children: ReactNode }) => {
       };
       return [...prev, entry];
     });
+    setSavedJobs(prev => prev.filter(j => j.id !== job.id));
   };
 
   return (

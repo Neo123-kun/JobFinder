@@ -19,7 +19,7 @@ export const fetchJobs = async (): Promise<Job[]> => {
       title: job.title ?? 'No Title',
       company: job.companyName ?? 'Unknown Company',
       locations: job.locations ?? undefined,
-      maxSalary: job.maxSalary ?? undefined,
+      maxSalary: job.maxSalary ?? 'Undefined',
       minSalary: job.minSalary ?? undefined,
       currency: job.currency ?? undefined,
       description: job.description ?? '',

@@ -57,9 +57,9 @@ export const ThemeProvider = ({ children }: Props) => {
           button: '#25eb9c',
           buttonV2: '#1fbfff',
           buttonSelected: '#135819',
-          buttonNotActive: '#73aefc',
+          buttonNotActive: '#62e0ff',
 
-          headerbg: '#06464b',
+          headerbg: '#08949e',
 
           oppositetext: '#ffffff',
           text: '#000000',
@@ -75,7 +75,7 @@ export const ThemeProvider = ({ children }: Props) => {
 
           subcolor: '#b4b4b4',
           
-          card: '#f2f2f2',
+          card: '#a4a4a4',
           
           button: '#26bd80',
           buttonV2: '#1d8cb8',

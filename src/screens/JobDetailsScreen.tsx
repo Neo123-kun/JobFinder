@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { FlatList, Text, View, Button, useWindowDimensions } from 'react-native';
+import { FlatList, Text, View, Button, useWindowDimensions, Touchable, TouchableOpacity } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/navigationTypes';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -48,30 +48,44 @@ export default function JobDetailsScreen() {
       />
 
       <View style={[styles.button, { marginTop: 30 }]}>
-        {/* Save / Saved Button */}
-        <Button
-          title={alreadySaved ? 'Saved' : 'Save'}
-          color={alreadySaved ? 'gray' : colors.button}
-          onPress={() => {
-            if (!alreadySaved) addJob(job); 
+        {/* Save or Saved Button */}
+        <TouchableOpacity
+          style={{ 
+            backgroundColor: alreadySaved ? colors.buttonSelected : colors.button,
+            padding: 10,
+            borderRadius: 5,
           }}
-        />
+          onPress={() => {
+            if (!alreadySaved) addJob(job);
+          }}
+        >
+          <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            {alreadySaved ? 'Saved' : 'Save'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={[styles.button, { marginTop: 16 }]}>
         {/* Apply Now Button */}
-        <Button
-          title={alreadyApplied ? 'Applied' : 'Apply Now'}
-          color={alreadyApplied ? 'gray' : colors.button}
-          disabled={alreadyApplied}
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.button,
+            padding: 10,
+            borderRadius: 5,
+            opacity: 1
+          }}
           onPress={() =>
             navigation.navigate('ApplicationForm', { 
               jobId: job.id,
-              jobData: job, 
-              fromSaved: false 
+              jobData: job,
+              fromSaved: false
             })
           }
-        />
+        >
+          <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            {'Apply Now'}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

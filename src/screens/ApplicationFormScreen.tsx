@@ -23,7 +23,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Application
 type RouteProps = RouteProp<RootStackParamList, 'ApplicationForm'>;
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('Name is required'),
+  name: Yup.string().required('Your name is required'),
   email: Yup.string()
     .email('Invalid email format')
     .matches(
@@ -57,7 +57,7 @@ export default function ApplicationFormScreen() {
       <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={[styles.title, { color: colors.dgreentext }]}>Job Application</Text>
       
-      {/* Job Brief Header */}
+      {/* Job Name and company Header */}
       <View style={{ marginBottom: 10 }}>
         <Text style={{ color: colors.dgreentext, fontSize: 21, fontWeight: 'bold' }}>{jobToApply.title}</Text>
         <Text style={{ color: colors.dgreentext, opacity: 0.7 }}>{jobToApply.company}</Text>
@@ -97,7 +97,10 @@ export default function ApplicationFormScreen() {
                 onPress: () => {
                   resetForm();
                   if (fromSaved) {
-                    navigation.navigate('HomeTabs');
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'HomeTabs' }],
+                    });
                   } else {
                     navigation.goBack();
                   }
@@ -110,10 +113,10 @@ export default function ApplicationFormScreen() {
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <View style={{ paddingBottom: 40 }}>
             
-            {/* Full Name Section */}
+            {/* Name Section */}
             <Text style={[styles.label, { color: colors.dgreentext }]}>Full Name</Text>
             <TextInput
-              placeholder="John Doe"
+              placeholder="Jane Doe"
               placeholderTextColor="#999"
               style={styles.input}
               onChangeText={handleChange('name')}

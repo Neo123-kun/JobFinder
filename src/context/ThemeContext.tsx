@@ -71,7 +71,7 @@ export const ThemeProvider = ({ children }: Props) => {
       : {
           background: '#253c2b',
           cardbg: '#216a3f',
-          inputbg: '#cdcdcd',
+          inputbg: '#7c7c7c',
 
           subcolor: '#b4b4b4',
           

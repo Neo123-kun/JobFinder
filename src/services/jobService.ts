@@ -23,10 +23,17 @@ export const fetchJobs = async (): Promise<Job[]> => {
       return [];
     }
 
-    const jobsWithId: Job[] = jobs.map((job: any) => ({
-      id: hashString((job.title ?? '') + (job.companyName ?? '') + (job.description ?? '').slice(0, 100)),
+    const jobsWithId: Job[] = jobs.map((job: any, index: number) => ({
+      id: hashString(
+        (job.title ?? '') +
+        (job.companyName ?? '') +
+        (job.description ?? '').slice(0, 100) +
+        index
+      ),
       title: job.title ?? 'No Title',
-      company: job.companyName ?? 'Unknown Company',
+      company: job.companyName
+        ? JSON.parse(`"${job.companyName}"`)
+        : 'Unknown Company',
       locations: job.locations ?? undefined,
       maxSalary: job.maxSalary ?? 'Undefined',
       minSalary: job.minSalary ?? undefined,

@@ -25,7 +25,6 @@ export const createStyles = (colors: any) => StyleSheet.create({
     shadowRadius: 4,
     backgroundColor: colors.cardbg,
   },
-  // Stripe Logic
   stripesContainer: {
     position: 'absolute',
     top: -width, 

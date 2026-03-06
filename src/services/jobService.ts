@@ -1,6 +1,15 @@
 import axios from 'axios';
-import uuid from 'react-native-uuid';
 import { Job } from '../types/job';
+
+function hashString(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36);
+}
 
 const API_URL = 'https://empllo.com/api/v1';
 
@@ -15,7 +24,7 @@ export const fetchJobs = async (): Promise<Job[]> => {
     }
 
     const jobsWithId: Job[] = jobs.map((job: any) => ({
-      id: uuid.v4().toString(),
+      id: hashString((job.title ?? '') + (job.companyName ?? '') + (job.description ?? '').slice(0, 100)),
       title: job.title ?? 'No Title',
       company: job.companyName ?? 'Unknown Company',
       locations: job.locations ?? undefined,

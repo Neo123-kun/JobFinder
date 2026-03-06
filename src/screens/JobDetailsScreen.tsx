@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import RenderHTML from 'react-native-render-html';
 import { useStyles } from './JobDetailsScreen.styles';
 import { ThemeContext } from '../context/ThemeContext';
+import { useJobContext } from '../context/JobContext';
 
 type JobDetailsRouteProp = RouteProp<RootStackParamList, 'JobDetails'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -17,6 +18,10 @@ export default function JobDetailsScreen() {
   const { width } = useWindowDimensions();
   const { colors } = useContext(ThemeContext);
   const styles = useStyles();
+  const { addJob, isSaved, appliedJobs } = useJobContext();
+
+  const alreadySaved = isSaved(job.id);
+  const alreadyApplied = appliedJobs.some(entry => entry.job.id === job.id);
 
   const locations =
     Array.isArray(job.locations) && job.locations.length > 0
@@ -43,9 +48,22 @@ export default function JobDetailsScreen() {
       />
 
       <View style={[styles.button, { marginTop: 30 }]}>
+        {/* Save / Saved Button */}
         <Button
-          title="Apply Now"
-          color={colors.button}
+          title={alreadySaved ? 'Saved' : 'Save'}
+          color={alreadySaved ? 'gray' : colors.button}
+          onPress={() => {
+            if (!alreadySaved) addJob(job); 
+          }}
+        />
+      </View>
+
+      <View style={[styles.button, { marginTop: 16 }]}>
+        {/* Apply Now Button */}
+        <Button
+          title={alreadyApplied ? 'Applied' : 'Apply Now'}
+          color={alreadyApplied ? 'gray' : colors.button}
+          disabled={alreadyApplied}
           onPress={() =>
             navigation.navigate('ApplicationForm', { 
               jobId: job.id,

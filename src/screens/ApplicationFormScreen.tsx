@@ -40,7 +40,7 @@ export default function ApplicationFormScreen() {
   const route = useRoute<RouteProps>();
 
   const { fromSaved, jobId, jobData } = route.params; 
-  const { applyJob, savedJobs } = useJobContext();
+  const { applyJob, savedJobs, removeJob } = useJobContext();
 
   const jobToApply = jobData || savedJobs.find(j => j.id === jobId) || { 
     id: jobId, 
@@ -83,6 +83,10 @@ export default function ApplicationFormScreen() {
             contact: values.contact,
             reason: values.reason,
           });
+
+          if (fromSaved) {
+            removeJob(jobToApply.id);
+          }
 
           Alert.alert(
             'Application Submitted',

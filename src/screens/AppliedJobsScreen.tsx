@@ -23,7 +23,6 @@ export default function AppliedJobsScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         data={appliedJobs}
-        //  Check for the key
         keyExtractor={(item) => item?.id?.toString() ?? Math.random().toString()}
         renderItem={({ item }) => {
           

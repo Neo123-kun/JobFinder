@@ -87,7 +87,6 @@ function BottomTabs() {
 export default function RootNavigator() {
   const { theme, colors } = useContext(ThemeContext);
 
-  // calculate top padding for Android status bar
   const statusBarHeight = Platform.OS === 'android' ? RNStatusBar.currentHeight ?? 0 : 0;
 
   return (
